@@ -22,7 +22,7 @@ FLAVOR="m1.small"
    for (( RUN=1; RUN<=$count; RUN++ ))
    do
     echo "Requesting Bulk VM $RUN to boot"
-    echo "Creating Bulk Launch VM# ${RUN}"
+    echo "Creating Bulk Launch VM # ${RUN}"
     VMUUID=$(nova boot \
         --image "${BOOTIMG}" \
         --flavor "${FLAVOR}" \
@@ -35,6 +35,6 @@ FLAVOR="m1.small"
          sleep 10
     done
 
-    echo "VM ${RUN} (${VMUUID}) is active."
+    echo "VM # ${RUN} (${VMUUID}) is active."
 
 done
