@@ -1,0 +1,40 @@
+#!/bin/bash
+# 
+# Bash Script to spin up xx Openstack VM's
+# By Bill Harper
+# 
+#!/bin/bash
+#echo Bulk VM Launch Script V1.4
+if [ $# -ne 1 ]; then
+    echo $0: usage: bulk-VM-Launch vmcount
+    exit 1
+fi
+
+count=$1
+
+KEY="BH-Keypair"
+BOOTIMG="ubuntu-14.04-server"
+ZONE="Metacloud"
+FLAVOR="m1.small"
+
+#source Admin.sh 
+
+   for (( RUN=1; RUN<=$count; RUN++ ))
+   do
+    echo "Requesting Bulk VM $RUN to boot"
+    echo "Creating Bulk Launch VM# ${RUN}"
+    VMUUID=$(nova boot \
+        --image "${BOOTIMG}" \
+        --flavor "${FLAVOR}" \
+        --key-name "${KEY}" \
+        "BulkVM-${RUN}-${ZONE}" | awk '/id/ {print $4}' | head -n 1);
+
+    until [[ "$(nova show ${VMUUID} | awk '/status/ {print $4}')" == "ACTIVE" ]]; do
+        :
+#        echo "looping"
+         sleep 10
+    done
+
+    echo "VM ${RUN} (${VMUUID}) is active."
+
+done
